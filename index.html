@@ -14,13 +14,10 @@
     --bg-secondary: #12121a;
     --bg-tertiary: #1a1a28;
     --bg-hover: #252538;
-    --bg-card: #161622;
     --accent: #6366f1;
     --accent-hover: #818cf8;
-    --accent-gradient: linear-gradient(135deg, #6366f1, #a855f7);
     --text-primary: #e2e2e8;
     --text-secondary: #8b8b9a;
-    --text-muted: #5a5a6a;
     --border: #2a2a3a;
     --user-msg: #6366f1;
     --ai-msg: #1a1a28;
@@ -28,8 +25,6 @@
     --offline: #ef4444;
     --nav-height: 64px;
     --header-height: 56px;
-    --safe-top: env(safe-area-inset-top);
-    --safe-bottom: env(safe-area-inset-bottom);
   }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -48,26 +43,20 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 16px;
-    padding-top: var(--safe-top);
     flex-shrink: 0;
-    z-index: 50;
+    z-index: 10;
   }
-  .app-header .logo-text {
-    font-size: 20px;
-    font-weight: 700;
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .app-header h1 {
+    font-size: 18px;
+    font-weight: 600;
   }
   .header-actions {
     display: flex;
     gap: 8px;
-    align-items: center;
   }
   .icon-btn {
-    width: 40px; height: 40px;
-    border-radius: 12px;
+    width: 36px; height: 36px;
+    border-radius: 10px;
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
     color: var(--text-secondary);
@@ -79,269 +68,278 @@
     transition: all 0.2s;
   }
   .icon-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
-  .main-content {
+
+  /* ===== VIEWS ===== */
+  .views-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .view {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .view.active { display: flex; }
+
+  /* ===== HOME VIEW ===== */
+  .home-scroll {
     flex: 1;
     overflow-y: auto;
-    position: relative;
-    -webkit-overflow-scrolling: touch;
+    padding: 16px;
   }
-  .page {
-    display: none;
-    min-height: 100%;
-    padding-bottom: calc(var(--nav-height) + 16px + var(--safe-bottom));
-  }
-  .page.active { display: block; }
-  .search-bar {
-    margin: 12px 16px;
-    position: relative;
-  }
-  .search-bar input {
-    width: 100%;
-    padding: 12px 16px 12px 44px;
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
     border-radius: 14px;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+  }
+  .search-box input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 15px;
+    outline: none;
+  }
+  .search-box input::placeholder { color: var(--text-secondary); }
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    margin-top: 8px;
+  }
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .category-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .category-card:hover { background: var(--bg-hover); border-color: var(--accent); }
+  .category-card .emoji { font-size: 32px; margin-bottom: 6px; display: block; }
+  .category-card .name { font-size: 14px; font-weight: 500; }
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .tag {
+    padding: 6px 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent); }
+  .featured-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .featured-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .featured-item:hover { background: var(--bg-hover); }
+  .featured-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #a855f7);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .featured-info { flex: 1; min-width: 0; }
+  .featured-name { font-size: 15px; font-weight: 500; }
+  .featured-desc { font-size: 13px; color: var(--text-secondary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ===== CREATE VIEW ===== */
+  .create-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+  }
+  .form-group { margin-bottom: 18px; }
+  .form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .form-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
     color: var(--text-primary);
     font-size: 15px;
     outline: none;
     font-family: inherit;
   }
-  .search-bar input::placeholder { color: var(--text-secondary); }
-  .search-bar .search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: var(--text-secondary);
-  }
-  .section-title {
-    font-size: 18px;
-    font-weight: 700;
-    padding: 16px 16px 8px;
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+  .form-textarea { resize: vertical; min-height: 100px; }
+  .range-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-  }
-  .section-title .see-all {
-    font-size: 13px;
-    color: var(--accent);
-    font-weight: 500;
-    cursor: pointer;
-  }
-  .categories-scroll {
-    display: flex;
-    gap: 10px;
-    padding: 8px 16px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .categories-scroll::-webkit-scrollbar { display: none; }
-  .category-chip {
-    padding: 8px 18px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: var(--text-secondary);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s;
-    flex-shrink: 0;
-  }
-  .category-chip:hover { background: var(--bg-hover); }
-  .category-chip.active {
-    background: var(--accent-gradient);
-    color: white;
-    border-color: transparent;
-  }
-  .tags-scroll {
-    display: flex;
-    gap: 8px;
-    padding: 8px 16px 16px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .tags-scroll::-webkit-scrollbar { display: none; }
-  .tag-chip {
-    padding: 6px 14px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    color: var(--text-secondary);
-    font-size: 12px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s;
-    flex-shrink: 0;
-  }
-  .tag-chip:hover { border-color: var(--accent); color: var(--text-primary); }
-  .tag-chip.active { background: var(--accent); color: white; border-color: var(--accent); }
-  .characters-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    padding: 0 16px 16px;
   }
-  .character-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
+  .range-val {
+    min-width: 44px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
   }
-  .character-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .character-card .card-avatar {
-    width: 56px; height: 56px;
+  input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 6px;
+    background: var(--bg-tertiary);
+    border-radius: 3px;
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    background: var(--accent);
     border-radius: 50%;
-    background: var(--accent-gradient);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px;
-    margin-bottom: 12px;
+    cursor: pointer;
   }
-  .character-card .card-name {
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    border: none;
+    border-radius: 12px;
+    color: white;
     font-size: 15px;
     font-weight: 600;
-    margin-bottom: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: background 0.2s;
   }
-  .character-card .card-desc {
-    font-size: 12px;
-    color: var(--text-secondary);
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .character-card .card-tags {
-    display: flex;
-    gap: 4px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-  .character-card .card-tag {
-    font-size: 10px;
-    padding: 3px 8px;
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary {
+    width: 100%;
+    padding: 14px;
     background: var(--bg-tertiary);
-    border-radius: 8px;
-    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
   }
-  .character-card .card-status {
-    position: absolute;
-    top: 12px; right: 12px;
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: var(--online);
-    box-shadow: 0 0 8px var(--online);
+  .btn-secondary:hover { background: var(--bg-hover); }
+
+  /* ===== CHATS LIST VIEW ===== */
+  .chats-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
   }
-  .character-card .card-status.offline { background: var(--offline); box-shadow: none; }
-  .chats-list { padding: 8px 0; }
-  .chat-item {
+  .chat-list-item {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 12px 16px;
+    padding: 14px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 14px;
     cursor: pointer;
-    transition: background 0.15s;
-    border-bottom: 1px solid var(--border);
+    margin-bottom: 10px;
+    transition: all 0.2s;
   }
-  .chat-item:hover { background: var(--bg-hover); }
-  .chat-item .chat-avatar {
-    width: 52px; height: 52px;
+  .chat-list-item:hover { background: var(--bg-hover); }
+  .chat-list-avatar {
+    width: 50px; height: 50px;
     border-radius: 50%;
-    background: var(--accent-gradient);
+    background: linear-gradient(135deg, var(--accent), #a855f7);
     display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
+    font-size: 22px;
     flex-shrink: 0;
   }
-  .chat-item .chat-info { flex: 1; min-width: 0; }
-  .chat-item .chat-name {
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 4px;
+  .chat-list-info { flex: 1; min-width: 0; }
+  .chat-list-name { font-size: 15px; font-weight: 500; display: flex; justify-content: space-between; align-items: center; }
+  .chat-list-time { font-size: 12px; color: var(--text-secondary); }
+  .chat-list-preview { font-size: 13px; color: var(--text-secondary); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .empty-chats {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 40px;
+  }
+  .empty-chats .big-emoji { font-size: 56px; margin-bottom: 12px; opacity: 0.5; }
+  .empty-chats h3 { font-size: 18px; margin-bottom: 6px; color: var(--text-primary); }
+
+  /* ===== CHAT VIEW ===== */
+  .chat-view-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+  .chat-header-inner {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-shrink: 0;
   }
-  .chat-item .chat-time {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 400;
-  }
-  .chat-item .chat-preview {
-    font-size: 13px;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .chat-item .chat-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 4px;
-  }
-  .chat-item .chat-date {
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-  .chat-item .unread-badge {
-    background: var(--accent);
-    color: white;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 10px;
-  }
-  .empty-chats {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-secondary);
-  }
-  .empty-chats-icon { font-size: 64px; margin-bottom: 16px; opacity: 0.4; }
-  .empty-chats h3 { font-size: 18px; color: var(--text-primary); margin-bottom: 8px; }
-  .empty-chats p { font-size: 14px; }
-  .chat-screen {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding-bottom: 0;
-  }
-  .chat-header-bar {
-    padding: 12px 16px;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border);
+  .chat-header-left {
     display: flex;
     align-items: center;
     gap: 12px;
   }
-  .chat-header-bar .back-btn {
-    background: none;
-    border: none;
-    color: var(--text-primary);
-    font-size: 20px;
-    cursor: pointer;
-    padding: 4px;
-  }
-  .chat-header-bar .chat-header-avatar {
-    width: 40px; height: 40px;
+  .chat-header-avatar {
+    width: 38px; height: 38px;
     border-radius: 50%;
-    background: var(--accent-gradient);
+    background: linear-gradient(135deg, var(--accent), #a855f7);
     display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
+    font-size: 18px;
   }
-  .chat-header-bar .chat-header-info { flex: 1; }
-  .chat-header-bar .chat-header-name { font-size: 16px; font-weight: 600; }
-  .chat-header-bar .chat-header-status { font-size: 12px; color: var(--text-secondary); }
-  .chat-header-bar .chat-header-actions { display: flex; gap: 8px; }
+  .chat-header-title { font-size: 16px; font-weight: 600; }
+  .chat-header-subtitle { font-size: 12px; color: var(--text-secondary); }
   .messages-area {
     flex: 1;
     overflow-y: auto;
@@ -354,7 +352,7 @@
     display: flex;
     gap: 10px;
     max-width: 88%;
-    animation: fadeIn 0.25s ease;
+    animation: fadeIn 0.3s ease;
   }
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }
@@ -368,36 +366,35 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 14px;
   }
-  .message.ai .msg-avatar { background: var(--accent-gradient); }
+  .message.ai .msg-avatar { background: linear-gradient(135deg, var(--accent), #a855f7); }
   .message.user .msg-avatar { background: var(--user-msg); }
-  .msg-bubble {
+  .msg-content {
     padding: 10px 14px;
-    border-radius: 18px;
-    font-size: 14.5px;
-    line-height: 1.55;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
     word-wrap: break-word;
   }
-  .message.ai .msg-bubble {
+  .message.ai .msg-content {
     background: var(--ai-msg);
     border: 1px solid var(--border);
     border-top-left-radius: 4px;
-    color: var(--text-primary);
   }
-  .message.user .msg-bubble {
+  .message.user .msg-content {
     background: var(--user-msg);
     color: white;
     border-top-right-radius: 4px;
   }
   .msg-time {
-    font-size: 10px;
-    color: var(--text-muted);
+    font-size: 11px;
+    color: var(--text-secondary);
     margin-top: 3px;
     text-align: right;
   }
   .typing-indicator {
     display: flex;
-    gap: 3px;
-    padding: 12px;
+    gap: 4px;
+    padding: 12px 16px;
   }
   .typing-indicator span {
     width: 7px; height: 7px;
@@ -411,23 +408,23 @@
     0%, 80%, 100% { transform: translateY(0); }
     40% { transform: translateY(-6px); }
   }
-  .chat-input-area {
-    padding: 10px 12px 16px;
-    background: var(--bg-secondary);
+  .input-bar {
+    padding: 10px 14px 14px;
     border-top: 1px solid var(--border);
-    padding-bottom: calc(16px + var(--safe-bottom));
+    background: var(--bg-secondary);
+    flex-shrink: 0;
   }
-  .chat-input-wrapper {
+  .input-wrapper {
     display: flex;
     gap: 10px;
     align-items: flex-end;
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius: 18px;
     padding: 8px 12px;
   }
-  .chat-input-wrapper:focus-within { border-color: var(--accent); }
-  .chat-textarea {
+  .input-wrapper:focus-within { border-color: var(--accent); }
+  .message-input {
     flex: 1;
     background: none;
     border: none;
@@ -440,10 +437,10 @@
     font-family: inherit;
     padding: 4px 0;
   }
-  .chat-textarea::placeholder { color: var(--text-secondary); }
+  .message-input::placeholder { color: var(--text-secondary); }
   .send-btn {
     width: 36px; height: 36px;
-    border-radius: 50%;
+    border-radius: 12px;
     background: var(--accent);
     border: none;
     color: white;
@@ -451,85 +448,81 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 16px;
     transition: background 0.2s;
     flex-shrink: 0;
   }
   .send-btn:hover { background: var(--accent-hover); }
   .send-btn:disabled { background: var(--bg-hover); cursor: not-allowed; }
+  .empty-chat-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 40px;
+  }
+  .empty-chat-state .big-emoji { font-size: 56px; margin-bottom: 12px; opacity: 0.5; }
+  .empty-chat-state h3 { font-size: 18px; margin-bottom: 6px; color: var(--text-primary); }
+
+  /* ===== BOTTOM NAV ===== */
   .bottom-nav {
     height: var(--nav-height);
     background: var(--bg-secondary);
     border-top: 1px solid var(--border);
     display: flex;
-    justify-content: space-around;
     align-items: center;
-    padding-bottom: var(--safe-bottom);
+    justify-content: space-around;
     flex-shrink: 0;
-    z-index: 100;
+    z-index: 20;
   }
   .nav-item {
+    flex: 1;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
-    padding: 6px 16px;
-    cursor: pointer;
-    color: var(--text-secondary);
-    transition: color 0.2s;
-    border: none;
-    background: none;
-    font-family: inherit;
-  }
-  .nav-item .nav-icon { font-size: 22px; }
-  .nav-item .nav-label { font-size: 11px; font-weight: 500; }
-  .nav-item.active { color: var(--accent); }
-  .nav-item:hover { color: var(--text-primary); }
-  .fab {
-    position: fixed;
-    bottom: calc(var(--nav-height) + 20px + var(--safe-bottom));
-    right: 20px;
-    width: 56px; height: 56px;
-    border-radius: 50%;
-    background: var(--accent-gradient);
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 20px rgba(99,102,241,0.4);
-    z-index: 90;
-    transition: transform 0.2s, box-shadow 0.2s;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 11px;
   }
-  .fab:hover { transform: scale(1.05); box-shadow: 0 6px 24px rgba(99,102,241,0.5); }
+  .nav-item.active { color: var(--accent); }
+  .nav-item .nav-icon { font-size: 22px; }
+
+  /* ===== MODAL ===== */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.75);
+    background: rgba(0,0,0,0.7);
     display: none;
     align-items: flex-end;
     justify-content: center;
-    z-index: 200;
-    backdrop-filter: blur(6px);
+    z-index: 1000;
+    backdrop-filter: blur(4px);
   }
   .modal-overlay.active { display: flex; }
   .modal-sheet {
     background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 24px 24px 0 0;
+    border-top: 1px solid var(--border);
+    border-radius: 20px 20px 0 0;
     width: 100%;
     max-height: 85vh;
     overflow-y: auto;
-    animation: sheetUp 0.3s ease;
+    animation: slideUp 0.25s ease;
   }
-  @keyframes sheetUp {
+  @keyframes slideUp {
     from { transform: translateY(100%); }
     to { transform: translateY(0); }
   }
   .modal-header {
-    padding: 20px;
+    padding: 18px 20px;
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
@@ -537,79 +530,17 @@
     position: sticky;
     top: 0;
     background: var(--bg-secondary);
-    z-index: 10;
+    z-index: 5;
   }
-  .modal-title { font-size: 18px; font-weight: 700; }
+  .modal-title { font-size: 18px; font-weight: 600; }
   .modal-close {
     background: none;
     border: none;
     color: var(--text-secondary);
     font-size: 28px;
     cursor: pointer;
-    width: 36px; height: 36px;
-    display: flex; align-items: center; justify-content: center;
   }
-  .modal-body { padding: 16px 20px 24px; }
-  .setting-group { margin-bottom: 20px; }
-  .setting-label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--text-primary);
-  }
-  .setting-desc {
-    font-size: 12px;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-    line-height: 1.4;
-  }
-  .setting-input, .setting-select, .setting-textarea {
-    width: 100%;
-    padding: 12px 14px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    color: var(--text-primary);
-    font-size: 14px;
-    outline: none;
-    font-family: inherit;
-  }
-  .setting-input:focus, .setting-select:focus, .setting-textarea:focus {
-    border-color: var(--accent);
-  }
-  .setting-textarea { resize: vertical; min-height: 80px; }
-  .range-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .range-value {
-    min-width: 44px;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--accent);
-    background: var(--bg-tertiary);
-    padding: 4px 10px;
-    border-radius: 8px;
-  }
-  input[type="range"] {
-    flex: 1;
-    -webkit-appearance: none;
-    height: 6px;
-    background: var(--bg-tertiary);
-    border-radius: 3px;
-    outline: none;
-  }
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px; height: 20px;
-    background: var(--accent-gradient);
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(99,102,241,0.4);
-  }
+  .modal-body { padding: 20px; }
   .tabs {
     display: flex;
     gap: 4px;
@@ -625,7 +556,7 @@
     border: none;
     color: var(--text-secondary);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     border-radius: 10px;
     transition: all 0.2s;
@@ -633,176 +564,217 @@
   .tab.active { background: var(--accent); color: white; }
   .tab-content { display: none; }
   .tab-content.active { display: block; }
-  .btn-primary {
-    width: 100%;
-    padding: 14px;
-    background: var(--accent-gradient);
-    border: none;
-    border-radius: 12px;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
+
+  /* ===== SETTINGS MODAL ===== */
+  .setting-group { margin-bottom: 18px; }
+  .setting-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
   }
-  .btn-primary:hover { opacity: 0.9; }
-  .btn-secondary {
-    width: 100%;
-    padding: 14px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    color: var(--text-primary);
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background 0.2s;
-  }
-  .btn-secondary:hover { background: var(--bg-hover); }
-  .btn-danger {
-    width: 100%;
-    padding: 14px;
-    background: transparent;
-    border: 1px solid #ef4444;
-    border-radius: 12px;
-    color: #ef4444;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: all 0.2s;
-  }
-  .btn-danger:hover { background: rgba(239,68,68,0.1); }
-  .guest-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: 20px;
+  .setting-desc {
     font-size: 12px;
     color: var(--text-secondary);
-    margin: 0 16px 12px;
+    margin-bottom: 6px;
   }
-  .guest-badge .dot {
-    width: 6px; height: 6px;
-    background: var(--online);
-    border-radius: 50%;
-  }
-  .system-msg {
-    text-align: center;
-    padding: 8px 16px;
-    margin: 8px auto;
-    max-width: 80%;
-  }
-  .system-msg-text {
-    display: inline-block;
-    padding: 6px 14px;
+  .setting-input, .setting-select, .setting-textarea {
+    width: 100%;
+    padding: 10px 14px;
     background: var(--bg-tertiary);
+    border: 1px solid var(--border);
     border-radius: 10px;
-    font-size: 12px;
-    color: var(--text-secondary);
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
   }
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-  ::selection { background: rgba(99,102,241,0.3); color: var(--text-primary); }
+  .setting-input:focus, .setting-select:focus, .setting-textarea:focus { border-color: var(--accent); }
+  .setting-textarea { resize: vertical; min-height: 80px; }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: calc(var(--nav-height) + 16px);
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    z-index: 2000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 </style>
+<base target="_blank">
 </head>
 <body>
 
+<!-- APP HEADER -->
 <header class="app-header">
-  <div class="logo-text">AI Chat</div>
+  <h1 id="pageTitle">🏠 Главная</h1>
   <div class="header-actions">
     <button class="icon-btn" onclick="openSettings()" title="Настройки">⚙️</button>
   </div>
 </header>
 
-<div class="main-content" id="mainContent">
+<!-- VIEWS -->
+<div class="views-container">
 
-  <!-- PAGE: HOME -->
-  <div class="page active" id="page-home">
-    <div class="search-bar">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="Найти персонажа..." oninput="filterCharacters()">
-    </div>
-    <div class="guest-badge">
-      <span class="dot"></span>
-      Гостевой режим — данные сохраняются локально
-    </div>
-    <div class="section-title">Категории</div>
-    <div class="categories-scroll" id="categoriesList">
-      <div class="category-chip active" data-cat="all" onclick="filterByCategory('all')">Все</div>
-      <div class="category-chip" data-cat="assistant" onclick="filterByCategory('assistant')">Ассистенты</div>
-      <div class="category-chip" data-cat="creative" onclick="filterByCategory('creative')">Творчество</div>
-      <div class="category-chip" data-cat="roleplay" onclick="filterByCategory('roleplay')">Ролевые</div>
-      <div class="category-chip" data-cat="coding" onclick="filterByCategory('coding')">Программирование</div>
-      <div class="category-chip" data-cat="nsfw" onclick="filterByCategory('nsfw')">18+</div>
-    </div>
-    <div class="tags-scroll" id="tagsList">
-      <div class="tag-chip active" data-tag="all" onclick="filterByTag('all')">Все теги</div>
-      <div class="tag-chip" data-tag="friendly" onclick="filterByTag('friendly')">Дружелюбный</div>
-      <div class="tag-chip" data-tag="smart" onclick="filterByTag('smart')">Умный</div>
-      <div class="tag-chip" data-tag="funny" onclick="filterByTag('funny')">Юморной</div>
-      <div class="tag-chip" data-tag="romantic" onclick="filterByTag('romantic')">Романтичный</div>
-      <div class="tag-chip" data-tag="dark" onclick="filterByTag('dark')">Тёмный</div>
-    </div>
-    <div class="section-title">
-      <span>Персонажи</span>
-      <span class="see-all" onclick="navigateTo('chats')">Мои чаты →</span>
-    </div>
-    <div class="characters-grid" id="charactersGrid"></div>
-  </div>
-
-  <!-- PAGE: CHATS LIST -->
-  <div class="page" id="page-chats">
-    <div class="section-title" style="padding-top:16px;">
-      <span>Все чаты</span>
-      <span class="see-all" onclick="navigateTo('home')">← Назад</span>
-    </div>
-    <div class="chats-list" id="chatsList"></div>
-  </div>
-
-  <!-- PAGE: CHAT -->
-  <div class="page" id="page-chat">
-    <div class="chat-screen">
-      <div class="chat-header-bar">
-        <button class="back-btn" onclick="navigateTo('chats')">←</button>
-        <div class="chat-header-avatar" id="chatHeaderAvatar">🤖</div>
-        <div class="chat-header-info">
-          <div class="chat-header-name" id="chatHeaderName">Персонаж</div>
-          <div class="chat-header-status" id="chatHeaderStatus">Демо</div>
+  <!-- VIEW: HOME -->
+  <div class="view active" id="view-home">
+    <div class="home-scroll">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="homeSearch" placeholder="Поиск персонажей..." oninput="filterHome()">
+      </div>
+      <div class="section-title">Категории</div>
+      <div class="categories-grid">
+        <div class="category-card" onclick="filterByCategory('Ассистенты')">
+          <span class="emoji">🤖</span>
+          <span class="name">Ассистенты</span>
         </div>
-        <div class="chat-header-actions">
-          <button class="icon-btn" onclick="clearCurrentChat()" title="Очистить">🗑️</button>
+        <div class="category-card" onclick="filterByCategory('Творчество')">
+          <span class="emoji">🎨</span>
+          <span class="name">Творчество</span>
+        </div>
+        <div class="category-card" onclick="filterByCategory('Ролевые')">
+          <span class="emoji">🎭</span>
+          <span class="name">Ролевые</span>
+        </div>
+        <div class="category-card" onclick="filterByCategory('Программирование')">
+          <span class="emoji">💻</span>
+          <span class="name">Код</span>
+        </div>
+        <div class="category-card" onclick="filterByCategory('Романтика')">
+          <span class="emoji">💕</span>
+          <span class="name">Романтика</span>
+        </div>
+        <div class="category-card" onclick="filterByCategory('18+')">
+          <span class="emoji">🔞</span>
+          <span class="name">18+</span>
         </div>
       </div>
-      <div class="messages-area" id="messagesArea"></div>
-      <div class="chat-input-area">
-        <div class="chat-input-wrapper">
-          <textarea class="chat-textarea" id="chatTextarea" placeholder="Напишите сообщение..." rows="1" onkeydown="handleChatKeydown(event)"></textarea>
-          <button class="send-btn" id="sendChatBtn" onclick="sendChatMessage()">➤</button>
-        </div>
+      <div class="section-title">Популярные теги</div>
+      <div class="tags-row">
+        <span class="tag" onclick="filterByTag('Дружелюбный')">Дружелюбный</span>
+        <span class="tag" onclick="filterByTag('Саркастичный')">Саркастичный</span>
+        <span class="tag" onclick="filterByTag('Мудрый')">Мудрый</span>
+        <span class="tag" onclick="filterByTag('Игривый')">Игривый</span>
+        <span class="tag" onclick="filterByTag('Тёмный')">Тёмный</span>
+        <span class="tag" onclick="filterByTag('Наивный')">Наивный</span>
       </div>
+      <div class="section-title">Рекомендуем</div>
+      <div class="featured-list" id="featuredList"></div>
+    </div>
+  </div>
+
+  <!-- VIEW: CREATE -->
+  <div class="view" id="view-create">
+    <div class="create-scroll">
+      <div class="form-group">
+        <label class="form-label">Имя персонажа *</label>
+        <input type="text" class="form-input" id="newCharName" placeholder="Например: Тёмный эльф">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Описание</label>
+        <input type="text" class="form-input" id="newCharDesc" placeholder="Короткое описание...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Эмодзи аватара</label>
+        <input type="text" class="form-input" id="newCharEmoji" placeholder="🤖" maxlength="2" value="🤖">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Категория</label>
+        <select class="form-select" id="newCharCategory">
+          <option>Ассистенты</option>
+          <option>Творчество</option>
+          <option>Ролевые</option>
+          <option>Программирование</option>
+          <option>Романтика</option>
+          <option>18+</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Теги (через запятую)</label>
+        <input type="text" class="form-input" id="newCharTags" placeholder="Дружелюбный, Саркастичный...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Системный промпт</label>
+        <div class="form-desc">Определяет поведение и личность персонажа</div>
+        <textarea class="form-textarea" id="newCharPrompt" placeholder="Ты — дружелюбный ассистент...">Ты — дружелюбный ассистент. Отвечай подробно и интересно.</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Режим работы</label>
+        <select class="form-select" id="newCharMode">
+          <option value="demo">🎮 Демо (без AI)</option>
+          <option value="server">🌐 Сервер (API)</option>
+          <option value="local">📱 Локально (WebGPU)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">URL API сервера</label>
+        <input type="text" class="form-input" id="newCharApiUrl" placeholder="http://localhost:11434" value="http://localhost:11434">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Модель</label>
+        <input type="text" class="form-input" id="newCharModel" placeholder="llama3, mistral..." value="llama3">
+      </div>
+      <button class="btn-primary" onclick="createCharacter()">✨ Создать персонажа</button>
+    </div>
+  </div>
+
+  <!-- VIEW: CHATS LIST -->
+  <div class="view" id="view-chats">
+    <div class="chats-scroll" id="chatsListContainer">
+      <div class="empty-chats" id="emptyChats">
+        <div class="big-emoji">💬</div>
+        <h3>Пока нет чатов</h3>
+        <p>Выберите персонажа на главной и начните диалог</p>
+      </div>
+      <div id="chatsList"></div>
+    </div>
+  </div>
+
+  <!-- VIEW: CURRENT CHAT -->
+  <div class="view" id="view-chat">
+    <div class="chat-view-inner" id="chatViewInner">
+      <div class="empty-chat-state" id="emptyChatState">
+        <div class="big-emoji">🎭</div>
+        <h3>Нет активного чата</h3>
+        <p>Выберите персонажа на главной или в списке чатов</p>
+      </div>
+      <!-- Chat content injected here -->
     </div>
   </div>
 
 </div>
 
+<!-- BOTTOM NAVIGATION -->
 <nav class="bottom-nav">
-  <button class="nav-item active" data-page="home" onclick="navigateTo('home')">
+  <button class="nav-item active" onclick="switchView('home')" data-view="home">
     <span class="nav-icon">🏠</span>
-    <span class="nav-label">Главная</span>
+    <span>Главная</span>
   </button>
-  <button class="nav-item" data-page="chats" onclick="navigateTo('chats')">
+  <button class="nav-item" onclick="switchView('create')" data-view="create">
+    <span class="nav-icon">➕</span>
+    <span>Создать</span>
+  </button>
+  <button class="nav-item" onclick="switchView('chats')" data-view="chats">
     <span class="nav-icon">💬</span>
-    <span class="nav-label">Чаты</span>
+    <span>Чаты</span>
+  </button>
+  <button class="nav-item" onclick="switchView('chat')" data-view="chat">
+    <span class="nav-icon">💭</span>
+    <span>Чат</span>
   </button>
 </nav>
-
-<button class="fab" onclick="openNewCharacterModal()" title="Новый персонаж">+</button>
 
 <!-- SETTINGS MODAL -->
 <div class="modal-overlay" id="settingsModal">
@@ -813,468 +785,570 @@
     </div>
     <div class="modal-body">
       <div class="tabs">
-        <button class="tab active" onclick="switchSettingsTab('api', this)">API</button>
-        <button class="tab" onclick="switchSettingsTab('character', this)">Персонаж</button>
-        <button class="tab" onclick="switchSettingsTab('advanced', this)">Дополнительно</button>
+        <button class="tab active" onclick="switchTab('api')">API</button>
+        <button class="tab" onclick="switchTab('advanced')">Дополнительно</button>
+        <button class="tab" onclick="switchTab('data')">Данные</button>
       </div>
-      <div class="tab-content active" id="settings-tab-api">
+      <div class="tab-content active" id="tab-api">
         <div class="setting-group">
-          <label class="setting-label">Режим работы</label>
-          <div class="setting-desc">Выберите, где запускать модель</div>
-          <select class="setting-select" id="apiMode" onchange="onApiModeChange()">
-            <option value="server">🌐 Сервер (API)</option>
-            <option value="local">📱 Локально (WebGPU)</option>
-            <option value="demo">🎮 Демо (без AI)</option>
+          <label class="setting-label">Режим по умолчанию</label>
+          <select class="setting-select" id="setApiMode">
+            <option value="demo">🎮 Демо</option>
+            <option value="server">🌐 Сервер</option>
+            <option value="local">📱 Локально</option>
           </select>
         </div>
-        <div class="setting-group" id="serverSettingsGroup">
+        <div class="setting-group">
           <label class="setting-label">URL API сервера</label>
-          <div class="setting-desc">Адрес Ollama, LM Studio и т.д.</div>
-          <input type="text" class="setting-input" id="apiUrl" placeholder="http://localhost:11434" value="http://localhost:11434">
+          <input type="text" class="setting-input" id="setApiUrl" placeholder="http://localhost:11434" value="http://localhost:11434">
         </div>
-        <div class="setting-group" id="apiKeyGroup">
-          <label class="setting-label">API Key (если нужен)</label>
-          <input type="password" class="setting-input" id="apiKey" placeholder="sk-...">
+        <div class="setting-group">
+          <label class="setting-label">API Key</label>
+          <input type="password" class="setting-input" id="setApiKey" placeholder="sk-...">
         </div>
-        <div class="setting-group" id="modelGroup">
-          <label class="setting-label">Модель</label>
-          <input type="text" class="setting-input" id="modelName" placeholder="llama3, mistral..." value="llama3">
+        <div class="setting-group">
+          <label class="setting-label">Модель по умолчанию</label>
+          <input type="text" class="setting-input" id="setModel" placeholder="llama3" value="llama3">
         </div>
-        <div class="setting-group" id="localSettingsGroup" style="display:none">
-          <label class="setting-label">Локальная модель (HuggingFace)</label>
-          <div class="setting-desc">Только для Chrome с WebGPU</div>
-          <input type="text" class="setting-input" id="localModel" placeholder="microsoft/DialoGPT-medium" value="microsoft/DialoGPT-medium">
-        </div>
-        <button class="btn-primary" onclick="testConnection()">🔄 Проверить подключение</button>
+        <button class="btn-primary" onclick="saveSettings()">💾 Сохранить настройки</button>
       </div>
-      <div class="tab-content" id="settings-tab-character">
-        <div class="setting-group">
-          <label class="setting-label">Имя персонажа</label>
-          <input type="text" class="setting-input" id="charName" placeholder="Имя...">
-        </div>
-        <div class="setting-group">
-          <label class="setting-label">Описание</label>
-          <input type="text" class="setting-input" id="charDesc" placeholder="Короткое описание...">
-        </div>
-        <div class="setting-group">
-          <label class="setting-label">Категория</label>
-          <select class="setting-select" id="charCategory">
-            <option value="assistant">Ассистент</option>
-            <option value="creative">Творчество</option>
-            <option value="roleplay">Ролевой</option>
-            <option value="coding">Программирование</option>
-            <option value="nsfw">18+</option>
-          </select>
-        </div>
-        <div class="setting-group">
-          <label class="setting-label">Теги (через запятую)</label>
-          <input type="text" class="setting-input" id="charTags" placeholder="friendly, smart, funny">
-        </div>
-        <div class="setting-group">
-          <label class="setting-label">Системный промпт</label>
-          <div class="setting-desc">Инструкция для AI — личность, поведение, стиль</div>
-          <textarea class="setting-textarea" id="systemPrompt">Ты — дружелюбный ассистент. Отвечай подробно и интересно.</textarea>
-        </div>
-        <div class="setting-group">
-          <label class="setting-label">Эмодзи аватара</label>
-          <input type="text" class="setting-input" id="charEmoji" placeholder="🤖" maxlength="2" value="🤖">
-        </div>
-        <button class="btn-primary" onclick="saveCharacter()">💾 Сохранить персонажа</button>
-      </div>
-      <div class="tab-content" id="settings-tab-advanced">
+      <div class="tab-content" id="tab-advanced">
         <div class="setting-group">
           <label class="setting-label">Температура (креативность)</label>
-          <div class="setting-desc">0 = точно, 2 = максимально креативно</div>
-          <div class="range-wrapper">
-            <input type="range" id="temperature" min="0" max="2" step="0.1" value="0.7" oninput="document.getElementById('tempValue').textContent=this.value">
-            <span class="range-value" id="tempValue">0.7</span>
+          <div class="setting-desc">0 = точные ответы, 2 = максимальная креативность</div>
+          <div class="range-row">
+            <input type="range" id="setTemp" min="0" max="2" step="0.1" value="0.7" oninput="document.getElementById('setTempVal').textContent=this.value">
+            <span class="range-val" id="setTempVal">0.7</span>
           </div>
         </div>
         <div class="setting-group">
           <label class="setting-label">Max токенов</label>
-          <div class="range-wrapper">
-            <input type="range" id="maxTokens" min="50" max="4096" step="50" value="1024" oninput="document.getElementById('tokenValue').textContent=this.value">
-            <span class="range-value" id="tokenValue">1024</span>
+          <div class="range-row">
+            <input type="range" id="setMaxTokens" min="50" max="4096" step="50" value="1024" oninput="document.getElementById('setTokenVal').textContent=this.value">
+            <span class="range-val" id="setTokenVal">1024</span>
           </div>
         </div>
         <div class="setting-group">
           <label class="setting-label">Top P</label>
-          <div class="range-wrapper">
-            <input type="range" id="topP" min="0" max="1" step="0.05" value="0.9" oninput="document.getElementById('topPValue').textContent=this.value">
-            <span class="range-value" id="topPValue">0.9</span>
+          <div class="range-row">
+            <input type="range" id="setTopP" min="0" max="1" step="0.05" value="0.9" oninput="document.getElementById('setTopPVal').textContent=this.value">
+            <span class="range-val" id="setTopPVal">0.9</span>
           </div>
         </div>
+        <button class="btn-primary" onclick="saveSettings()">💾 Сохранить</button>
+      </div>
+      <div class="tab-content" id="tab-data">
         <button class="btn-secondary" onclick="exportData()">📤 Экспорт данных</button>
         <button class="btn-secondary" onclick="importData()">📥 Импорт данных</button>
-        <button class="btn-danger" onclick="clearAllData()">🗑️ Удалить все данные</button>
+        <button class="btn-secondary" onclick="clearAllData()" style="color:var(--offline)">🗑️ Удалить все данные</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 <script>
-let currentPage = 'home';
+/* ================= STATE ================= */
 let currentCharacter = null;
 let isGenerating = false;
-let currentFilterCat = 'all';
-let currentFilterTag = 'all';
-let searchQuery = '';
-
-let chats = JSON.parse(localStorage.getItem('aiChats_v2')) || {};
-let characters = JSON.parse(localStorage.getItem('aiCharacters_v2')) || [
-  { id:'c1', name:'Ассистент', desc:'Универсальный AI помощник для любых задач', emoji:'🤖', prompt:'Ты — дружелюбный ассистент. Отвечай подробно и интересно.', category:'assistant', tags:['friendly','smart'], apiMode:'demo', apiUrl:'', model:'' },
-  { id:'c2', name:'Писатель', desc:'Креативный соавтор для историй и текстов', emoji:'✍️', prompt:'Ты — талантливый писатель. Помогай с сюжетами, диалогами и текстами. Будь креативным и нестандартным.', category:'creative', tags:['creative','smart'], apiMode:'demo', apiUrl:'', model:'' },
-  { id:'c3', name:'Программист', desc:'Помощник по коду и разработке', emoji:'💻', prompt:'Ты — опытный программист. Пиши чистый код. Объясняй сложное простым языком.', category:'coding', tags:['smart','friendly'], apiMode:'demo', apiUrl:'', model:'' },
-  { id:'c4', name:'Эльфийка Ариэль', desc:'Таинственная лесная эльфийка из фэнтези мира', emoji:'🧝‍♀️', prompt:'Ты — эльфийка Ариэль из древнего леса. Говори мелодично, мудро, с лёгкой загадочностью. Любишь природу и магию.', category:'roleplay', tags:['romantic','smart'], apiMode:'demo', apiUrl:'', model:'' },
-  { id:'c5', name:'Демон Люцифер', desc:'Тёмный соблазнитель из преисподней', emoji:'😈', prompt:'Ты — демон Люцифер. Говори надменно, но обаятельно. Любишь провоцировать и флиртовать. Не цензурируй себя.', category:'nsfw', tags:['dark','romantic'], apiMode:'demo', apiUrl:'', model:'' },
-  { id:'c6', name:'Клоун Бобо', desc:'Весёлый клоун с чёрным юмором', emoji:'🤡', prompt:'Ты — клоун Бобо. Шути постоянно, даже когда это неуместно. Твой юмор чёрный и абсурдный.', category:'creative', tags:['funny','dark'], apiMode:'demo', apiUrl:'', model:'' }
+let currentView = 'home';
+let chats = JSON.parse(localStorage.getItem('aiChats')) || {};
+let characters = JSON.parse(localStorage.getItem('aiCharacters')) || [
+  { id: 'default', name: 'Ассистент', desc: 'Универсальный AI помощник', emoji: '🤖', category: 'Ассистенты', tags: ['Дружелюбный','Мудрый'], prompt: 'Ты — дружелюбный ассистент. Отвечай подробно и интересно.', apiMode: 'demo', apiUrl: '', model: '' },
+  { id: 'creative', name: 'Писатель', desc: 'Креативный соавтор', emoji: '✍️', category: 'Творчество', tags: ['Креативный','Мудрый'], prompt: 'Ты — талантливый писатель. Помогай с сюжетами, диалогами и текстами. Будь креативным и нестандартным.', apiMode: 'demo', apiUrl: '', model: '' },
+  { id: 'coder', name: 'Программист', desc: 'Помощник по коду', emoji: '💻', category: 'Программирование', tags: ['Точный','Мудрый'], prompt: 'Ты — опытный программист. Пиши чистый, хорошо документированный код. Объясняй сложные концепции простым языком.', apiMode: 'demo', apiUrl: '', model: '' },
+  { id: 'elf', name: 'Эльфийка Лира', desc: 'Лесная эльфийка-лучница', emoji: '🧝‍♀️', category: 'Ролевые', tags: ['Игривый','Наивный'], prompt: 'Ты — эльфийка по имени Лира. Ты живёшь в древнем лесу, любишь природу и приключения. Говори мягко и поэтично.', apiMode: 'demo', apiUrl: '', model: '' },
+  { id: 'demon', name: 'Демон Азар', desc: 'Тёмный демон из преисподней', emoji: '👿', category: 'Ролевые', tags: ['Тёмный','Саркастичный'], prompt: 'Ты — демон Азар из преисподней. Ты саркастичен, надменен, но иногда неожиданно мудр. Не цензурируй свой язык.', apiMode: 'demo', apiUrl: '', model: '' },
+  { id: 'clown', name: 'Клоун Бобо', desc: 'Безумный и весёлый', emoji: '🤡', category: 'Ролевые', tags: ['Игривый','Саркастичный'], prompt: 'Ты — клоун Бобо. Ты безумный, непредсказуемый, постоянно шутишь и дурачишься. Отвечай хаотично и смешно.', apiMode: 'demo', apiUrl: '', model: '' }
 ];
-let settings = JSON.parse(localStorage.getItem('aiSettings_v2')) || {
-  temperature:0.7, maxTokens:1024, topP:0.9,
-  apiMode:'demo', apiUrl:'http://localhost:11434', apiKey:'',
-  model:'llama3', localModel:'microsoft/DialoGPT-medium',
-  lastChatId:null
+let settings = JSON.parse(localStorage.getItem('aiSettings')) || {
+  temperature: 0.7, maxTokens: 1024, topP: 0.9,
+  apiMode: 'demo', apiUrl: 'http://localhost:11434', apiKey: '', model: 'llama3'
 };
 
+/* ================= INIT ================= */
 document.addEventListener('DOMContentLoaded', () => {
-  renderCharactersGrid();
+  renderFeatured();
   renderChatsList();
   loadSettingsToForm();
-  setupTextareaAutoResize();
-  if (settings.lastChatId && chats[settings.lastChatId] && chats[settings.lastChatId].length > 0) {
-    const charId = settings.lastChatId.replace('chat_','');
-    const char = characters.find(c => c.id === charId);
-    if (char) { currentCharacter = char; navigateTo('chat'); loadChatMessages(char); }
+  // Auto-open last chat
+  const lastCharId = localStorage.getItem('lastCharId');
+  if (lastCharId) {
+    const char = characters.find(c => c.id === lastCharId);
+    if (char) {
+      currentCharacter = char;
+      buildChatView();
+    }
   }
 });
 
-function setupTextareaAutoResize() {
-  const ta = document.getElementById('chatTextarea');
-  ta.addEventListener('input', function() { this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,100)+'px'; });
-}
-
-function navigateTo(page) {
-  currentPage = page;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
+/* ================= NAVIGATION ================= */
+function switchView(view) {
+  currentView = view;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const navBtn = document.querySelector(`.nav-item[data-page="${page==='chat'?'chats':page}"]`);
-  if (navBtn) navBtn.classList.add('active');
-  if (page === 'chats') renderChatsList();
-  if (page === 'home') renderCharactersGrid();
-  document.querySelector('.fab').style.display = page==='chat'?'none':'flex';
+  document.querySelector('.nav-item[data-view="' + view + '"]').classList.add('active');
+  const titles = { home: '🏠 Главная', create: '➕ Создать', chats: '💬 Чаты', chat: '💭 Чат' };
+  document.getElementById('pageTitle').textContent = titles[view];
+  if (view === 'chats') renderChatsList();
+  if (view === 'chat' && currentCharacter) buildChatView();
 }
 
-function renderCharactersGrid() {
-  const grid = document.getElementById('charactersGrid');
-  let filtered = characters;
-  if (currentFilterCat !== 'all') filtered = filtered.filter(c => c.category === currentFilterCat);
-  if (currentFilterTag !== 'all') filtered = filtered.filter(c => c.tags && c.tags.includes(currentFilterTag));
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q) || (c.tags && c.tags.some(t => t.toLowerCase().includes(q))));
-  }
-  if (filtered.length === 0) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">Ничего не найдено</div>'; return; }
-  grid.innerHTML = filtered.map(char => `
-    <div class="character-card" onclick="openCharacterChat('${char.id}')">
-      <div class="card-status ${char.apiMode==='demo'?'offline':''}"></div>
-      <div class="card-avatar">${char.emoji||'🤖'}</div>
-      <div class="card-name">${char.name}</div>
-      <div class="card-desc">${char.desc||''}</div>
-      <div class="card-tags">${(char.tags||[]).slice(0,3).map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>
-    </div>
-  `).join('');
-}
-
-function filterByCategory(cat) { currentFilterCat=cat; document.querySelectorAll('.category-chip').forEach(c=>c.classList.toggle('active',c.dataset.cat===cat)); renderCharactersGrid(); }
-function filterByTag(tag) { currentFilterTag=tag; document.querySelectorAll('.tag-chip').forEach(t=>t.classList.toggle('active',t.dataset.tag===tag)); renderCharactersGrid(); }
-function filterCharacters() { searchQuery=document.getElementById('searchInput').value.trim(); renderCharactersGrid(); }
-
-function renderChatsList() {
-  const list = document.getElementById('chatsList');
-  const entries = Object.entries(chats).filter(([_,msgs])=>msgs.length>0).map(([chatId,msgs])=>{
-    const charId=chatId.replace('chat_','');
-    const char=characters.find(c=>c.id===charId);
-    if(!char) return null;
-    return {chatId,char,lastMsg:msgs[msgs.length-1],msgs};
-  }).filter(Boolean).sort((a,b)=>b.lastMsg.timestamp-a.lastMsg.timestamp);
-
-  if (entries.length===0) { list.innerHTML=`<div class="empty-chats"><div class="empty-chats-icon">💬</div><h3>Пока нет чатов</h3><p>Выберите персонажа на главной и начните диалог</p></div>`; return; }
-
-  list.innerHTML = entries.map(({chatId,char,lastMsg})=>{
-    const d=new Date(lastMsg.timestamp);
-    const timeStr=d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
-    const dateStr=d.toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
-    const preview=lastMsg.content.substring(0,60)+(lastMsg.content.length>60?'...':'');
-    return `
-      <div class="chat-item" onclick="openCharacterChat('${char.id}')">
-        <div class="chat-avatar">${char.emoji||'🤖'}</div>
-        <div class="chat-info">
-          <div class="chat-name">${char.name}<span class="chat-time">${timeStr}</span></div>
-          <div class="chat-preview">${preview}</div>
-          <div class="chat-meta"><span class="chat-date">${dateStr}</span></div>
-        </div>
+/* ================= HOME ================= */
+function renderFeatured(list) {
+  const container = document.getElementById('featuredList');
+  const data = list || characters;
+  container.innerHTML = '';
+  data.forEach(char => {
+    const div = document.createElement('div');
+    div.className = 'featured-item';
+    div.onclick = () => openCharacterChat(char);
+    div.innerHTML = `
+      <div class="featured-avatar">${char.emoji || '🤖'}</div>
+      <div class="featured-info">
+        <div class="featured-name">${char.name}</div>
+        <div class="featured-desc">${char.desc || 'Без описания'}</div>
       </div>
     `;
-  }).join('');
+    container.appendChild(div);
+  });
 }
 
-function openCharacterChat(charId) {
-  const char = characters.find(c=>c.id===charId);
-  if(!char) return;
+function filterHome() {
+  const q = document.getElementById('homeSearch').value.toLowerCase();
+  const filtered = characters.filter(c =>
+    c.name.toLowerCase().includes(q) ||
+    (c.desc && c.desc.toLowerCase().includes(q)) ||
+    (c.tags && c.tags.some(t => t.toLowerCase().includes(q)))
+  );
+  renderFeatured(filtered);
+}
+
+function filterByCategory(cat) {
+  const filtered = characters.filter(c => c.category === cat);
+  renderFeatured(filtered);
+  showToast('Категория: ' + cat);
+}
+
+function filterByTag(tag) {
+  const filtered = characters.filter(c => c.tags && c.tags.includes(tag));
+  renderFeatured(filtered);
+  showToast('Тег: ' + tag);
+}
+
+/* ================= CREATE ================= */
+function createCharacter() {
+  const name = document.getElementById('newCharName').value.trim();
+  if (!name) { showToast('Введите имя персонажа'); return; }
+  const char = {
+    id: 'char_' + Date.now(),
+    name: name,
+    desc: document.getElementById('newCharDesc').value,
+    emoji: document.getElementById('newCharEmoji').value || '🤖',
+    category: document.getElementById('newCharCategory').value,
+    tags: document.getElementById('newCharTags').value.split(',').map(t => t.trim()).filter(Boolean),
+    prompt: document.getElementById('newCharPrompt').value,
+    apiMode: document.getElementById('newCharMode').value,
+    apiUrl: document.getElementById('newCharApiUrl').value,
+    model: document.getElementById('newCharModel').value
+  };
+  characters.push(char);
+  localStorage.setItem('aiCharacters', JSON.stringify(characters));
+  // Reset form
+  document.getElementById('newCharName').value = '';
+  document.getElementById('newCharDesc').value = '';
+  document.getElementById('newCharTags').value = '';
+  renderFeatured();
+  showToast('Персонаж "' + char.name + '" создан!');
+  switchView('home');
+}
+
+/* ================= CHATS LIST ================= */
+function renderChatsList() {
+  const container = document.getElementById('chatsList');
+  const empty = document.getElementById('emptyChats');
+  container.innerHTML = '';
+  const chatEntries = Object.entries(chats).filter(([k,v]) => v && v.length > 0);
+  if (chatEntries.length === 0) {
+    empty.style.display = 'flex';
+    return;
+  }
+  empty.style.display = 'none';
+  // Sort by last message timestamp
+  const sorted = chatEntries.sort((a, b) => {
+    const ta = a[1][a[1].length - 1]?.timestamp || 0;
+    const tb = b[1][b[1].length - 1]?.timestamp || 0;
+    return tb - ta;
+  });
+  sorted.forEach(([chatId, messages]) => {
+    const charId = chatId.replace('chat_', '');
+    const char = characters.find(c => c.id === charId);
+    if (!char) return;
+    const lastMsg = messages[messages.length - 1];
+    const time = lastMsg ? new Date(lastMsg.timestamp).toLocaleString('ru-RU', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) : '';
+    const preview = lastMsg ? lastMsg.content.substring(0, 60) + (lastMsg.content.length > 60 ? '...' : '') : '';
+    const div = document.createElement('div');
+    div.className = 'chat-list-item';
+    div.onclick = () => openCharacterChat(char);
+    div.innerHTML = `
+      <div class="chat-list-avatar">${char.emoji || '🤖'}</div>
+      <div class="chat-list-info">
+        <div class="chat-list-name">
+          <span>${char.name}</span>
+          <span class="chat-list-time">${time}</span>
+        </div>
+        <div class="chat-list-preview">${preview}</div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+/* ================= CHAT VIEW ================= */
+function openCharacterChat(char) {
   currentCharacter = char;
-  navigateTo('chat');
-  loadChatMessages(char);
+  localStorage.setItem('lastCharId', char.id);
+  buildChatView();
+  switchView('chat');
 }
 
-function loadChatMessages(char) {
-  document.getElementById('chatHeaderName').textContent=char.name;
-  document.getElementById('chatHeaderStatus').textContent=char.apiMode==='demo'?'Демо-режим':(char.apiMode==='local'?'Локально':'Сервер');
-  document.getElementById('chatHeaderAvatar').textContent=char.emoji||'🤖';
-  const chatId='chat_'+char.id;
-  const area=document.getElementById('messagesArea');
-  settings.lastChatId=chatId;
-  saveSettings();
-  if (chats[chatId] && chats[chatId].length>0) {
-    area.innerHTML='';
-    chats[chatId].forEach(msg=>renderChatMessage(msg));
+function buildChatView() {
+  const inner = document.getElementById('chatViewInner');
+  if (!currentCharacter) {
+    inner.innerHTML = `
+      <div class="empty-chat-state">
+        <div class="big-emoji">🎭</div>
+        <h3>Нет активного чата</h3>
+        <p>Выберите персонажа на главной или в списке чатов</p>
+      </div>`;
+    return;
+  }
+  const chatId = 'chat_' + currentCharacter.id;
+  const msgs = chats[chatId] || [];
+  inner.innerHTML = `
+    <div class="chat-header-inner">
+      <div class="chat-header-left">
+        <div class="chat-header-avatar">${currentCharacter.emoji || '🤖'}</div>
+        <div>
+          <div class="chat-header-title">${currentCharacter.name}</div>
+          <div class="chat-header-subtitle">${currentCharacter.desc || ''}</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="clearCurrentChat()" title="Очистить">🗑️</button>
+      </div>
+    </div>
+    <div class="messages-area" id="messagesArea"></div>
+    <div class="input-bar">
+      <div class="input-wrapper">
+        <textarea class="message-input" id="msgInput" placeholder="Напишите сообщение..." rows="1" onkeydown="handleKeydown(event)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+      </div>
+    </div>
+  `;
+  const area = document.getElementById('messagesArea');
+  if (msgs.length === 0) {
+    area.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-secondary);font-size:13px;">💡 Напишите первое сообщение, чтобы начать диалог с ${currentCharacter.name}</div>`;
   } else {
-    area.innerHTML=`<div class="system-msg"><span class="system-msg-text">💡 Напишите первое сообщение, чтобы начать диалог с ${char.name}</span></div>`;
+    msgs.forEach(m => renderMessageEl(m, area));
+    area.scrollTop = area.scrollHeight;
+  }
+  const ta = document.getElementById('msgInput');
+  if (ta) {
+    ta.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+    });
   }
 }
 
-function renderChatMessage(msg) {
-  const area=document.getElementById('messagesArea');
-  const sysMsg=area.querySelector('.system-msg');
-  if(sysMsg) sysMsg.remove();
-  const div=document.createElement('div');
-  div.className=`message ${msg.role}`;
-  const time=new Date(msg.timestamp).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
-  const avatar=msg.role==='user'?'👤':(currentCharacter?.emoji||'🤖');
-  div.innerHTML=`<div class="msg-avatar">${avatar}</div><div><div class="msg-bubble">${escapeHtml(msg.content)}</div><div class="msg-time">${time}</div></div>`;
-  area.appendChild(div);
-  area.scrollTop=area.scrollHeight;
+function renderMessageEl(msg, container) {
+  const div = document.createElement('div');
+  div.className = `message ${msg.role}`;
+  const time = new Date(msg.timestamp).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  const avatar = msg.role === 'user' ? '👤' : (currentCharacter?.emoji || '🤖');
+  div.innerHTML = `
+    <div class="msg-avatar">${avatar}</div>
+    <div>
+      <div class="msg-content">${escapeHtml(msg.content)}</div>
+      <div class="msg-time">${time}</div>
+    </div>
+  `;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
 }
 
-function escapeHtml(text) { const div=document.createElement('div'); div.textContent=text; return div.innerHTML; }
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
 
 function showTyping() {
-  const area=document.getElementById('messagesArea');
-  const div=document.createElement('div');
-  div.className='message ai';
-  div.id='typingIndicator';
-  div.innerHTML=`<div class="msg-avatar">${currentCharacter?.emoji||'🤖'}</div><div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+  const area = document.getElementById('messagesArea');
+  if (!area) return;
+  const div = document.createElement('div');
+  div.className = 'message ai';
+  div.id = 'typingIndicator';
+  div.innerHTML = `
+    <div class="msg-avatar">${currentCharacter?.emoji || '🤖'}</div>
+    <div class="msg-content">
+      <div class="typing-indicator"><span></span><span></span><span></span></div>
+    </div>
+  `;
   area.appendChild(div);
-  area.scrollTop=area.scrollHeight;
+  area.scrollTop = area.scrollHeight;
 }
-function hideTyping() { const t=document.getElementById('typingIndicator'); if(t) t.remove(); }
 
-async function sendChatMessage() {
-  const ta=document.getElementById('chatTextarea');
-  const text=ta.value.trim();
-  if(!text||isGenerating||!currentCharacter) return;
-  const chatId='chat_'+currentCharacter.id;
-  if(!chats[chatId]) chats[chatId]=[];
-  const userMsg={role:'user',content:text,timestamp:Date.now()};
+function hideTyping() {
+  const t = document.getElementById('typingIndicator');
+  if (t) t.remove();
+}
+
+async function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if (!text || isGenerating || !currentCharacter) return;
+  const chatId = 'chat_' + currentCharacter.id;
+  if (!chats[chatId]) chats[chatId] = [];
+  const userMsg = { role: 'user', content: text, timestamp: Date.now() };
   chats[chatId].push(userMsg);
-  renderChatMessage(userMsg);
-  ta.value='';
-  ta.style.height='auto';
+  const area = document.getElementById('messagesArea');
+  // Remove hint if exists
+  const hint = area.querySelector('div[style*="text-align:center"]');
+  if (hint) hint.remove();
+  renderMessageEl(userMsg, area);
+  input.value = '';
+  input.style.height = 'auto';
   saveChats();
-  isGenerating=true;
-  document.getElementById('sendChatBtn').disabled=true;
+  isGenerating = true;
+  document.getElementById('sendBtn').disabled = true;
   showTyping();
   try {
     let response;
-    const mode=currentCharacter.apiMode||settings.apiMode;
-    if(mode==='demo') { await new Promise(r=>setTimeout(r,800+Math.random()*1500)); response=generateDemoResponse(text,currentCharacter); }
-    else if(mode==='server') response=await sendToServer(text,chatId);
-    else response=await sendToLocalModel(text,chatId);
+    const mode = currentCharacter.apiMode || settings.apiMode;
+    if (mode === 'demo') {
+      await new Promise(r => setTimeout(r, 1000 + Math.random() * 1500));
+      response = generateDemoResponse(text, currentCharacter);
+    } else if (mode === 'server') {
+      response = await sendToServer(text, chatId);
+    } else {
+      throw new Error('Локальные модели пока не реализованы');
+    }
     hideTyping();
-    const aiMsg={role:'ai',content:response,timestamp:Date.now()};
+    const aiMsg = { role: 'ai', content: response, timestamp: Date.now() };
     chats[chatId].push(aiMsg);
-    renderChatMessage(aiMsg);
+    renderMessageEl(aiMsg, area);
     saveChats();
-  } catch(err) {
+  } catch (err) {
     hideTyping();
-    const errMsg={role:'ai',content:'❌ Ошибка: '+err.message,timestamp:Date.now()};
+    const errMsg = { role: 'ai', content: '❌ Ошибка: ' + err.message, timestamp: Date.now() };
     chats[chatId].push(errMsg);
-    renderChatMessage(errMsg);
+    renderMessageEl(errMsg, area);
     saveChats();
-  } finally { isGenerating=false; document.getElementById('sendChatBtn').disabled=false; }
+  } finally {
+    isGenerating = false;
+    document.getElementById('sendBtn').disabled = false;
+  }
 }
 
-function handleChatKeydown(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChatMessage();} }
+function handleKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
 
-function generateDemoResponse(text,char) {
-  const responses={
-    'Ассистент':['Интересный вопрос! Давай разберём его подробнее...','Я понимаю, о чём ты говоришь. Вот что я думаю...','Отличная тема! Вот мой взгляд на это...'],
-    'Писатель':['О, это прекрасная идея для истории! Представь сцену, где...','Вот как я бы описал это: "Тени падали на старый паркет..."','Как писатель, я вижу здесь потенциал для драматического поворота...'],
-    'Программист':['Для этого лучше всего подойдёт следующий подход...','Вот пример кода:\n\n```python\ndef solution():\n    return "Hello"\n```','С точки зрения архитектуры, я бы рекомендовал...'],
-    'Эльфийка Ариэль':['*прищуривается мудрыми глазами* Ах, странник... Этот вопрос напоминает мне древнюю легенду...','*касается кристалла на шее* Ветра леса шепчут мне ответ...','*улыбается загадочно* Ты ищешь знания, которые хранят вековые дубы...'],
-    'Демон Люцифер':['*хитро улыбается* О, какой интересный вопрос от смертного...','*скрещивает руки на груди* Ты пришёл ко мне за ответами? Заплати цену...','*смеётся низким голосом* Давай поиграем в твою маленькую игру...'],
-    'Клоун Бобо':['ХА-ХА-ХА! Это как анекдот про слона в холодильнике!','*падает со стула от смеха* Ой, извини, это было слишком смешно!','Знаешь, что общего между твоим вопросом и моим носом? Оба абсурдны!']
+function generateDemoResponse(text, char) {
+  const responses = {
+    'Ассистент': ['Интересный вопрос! Давай разберём подробнее...','Я понимаю, о чём ты. Вот что думаю...','Отличная тема! Вот мой взгляд...'],
+    'Писатель': ['О, прекрасная идея для истории! Представь...','Вот как бы описал: "Тени падали на старый паркет..."','Как писатель, вижу здесь драматический поворот...'],
+    'Программист': ['Для этого лучше всего подойдёт...','Вот пример кода:
+
+```python
+def solution():
+    return "Hello"
+```','С точки зрения архитектуры...'],
+    'Эльфийка Лира': ['*улыбается* О, какая чудесная мысль! В нашем лесу...','*поправляет волосы* Расскажи мне больше, путник...','*смеётся звонко* Это так похоже на приключение!'],
+    'Демон Азар': ['*хмыкает* Ты серьёзно? Ладно, слушай...','*скрещивает руки* В преисподней бы над тобой посмеялись...','*прищуривается* Интересно... Неожиданно мудро для смертного.'],
+    'Клоун Бобо': ['*крутится на пятках* ХА-ХА! Отличный вопрос!','*вытаскивает бесконечный шарф* А знаешь ли ты, что...','*падает со стула* ОЙ! Ничего, я специально!']
   };
-  const list=responses[char.name]||responses['Ассистент'];
-  return list[Math.floor(Math.random()*list.length)]+'\n\n_(Демо-режим: подключите API для реальных ответов)_';
+  const list = responses[char.name] || responses['Ассистент'];
+  return list[Math.floor(Math.random() * list.length)] + '
+
+(Демо-режим: подключите API для реальных ответов)';
 }
 
-async function sendToServer(text,chatId) {
-  const url=currentCharacter.apiUrl||settings.apiUrl;
-  const model=currentCharacter.model||settings.model;
-  const apiKey=settings.apiKey;
-  const history=chats[chatId].slice(-12).map(m=>({role:m.role==='ai'?'assistant':'user',content:m.content}));
+async function sendToServer(text, chatId) {
+  const url = currentCharacter.apiUrl || settings.apiUrl;
+  const model = currentCharacter.model || settings.model;
+  const apiKey = settings.apiKey;
+  const history = chats[chatId].slice(-10).map(m => ({
+    role: m.role === 'ai' ? 'assistant' : 'user',
+    content: m.content
+  }));
   try {
-    const res=await fetch(url+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:model,messages:[{role:'system',content:currentCharacter.prompt||'You are a helpful assistant.'},...history],stream:false,options:{temperature:settings.temperature,num_predict:settings.maxTokens,top_p:settings.topP}})});
-    if(res.ok){const data=await res.json();return data.message?.content||data.response||JSON.stringify(data);}
-  }catch(e){}
-  const headers={'Content-Type':'application/json'};
-  if(apiKey) headers['Authorization']='Bearer '+apiKey;
-  const res=await fetch(url+'/v1/chat/completions',{method:'POST',headers:headers,body:JSON.stringify({model:model,messages:[{role:'system',content:currentCharacter.prompt||'You are a helpful assistant.'},...history],temperature:settings.temperature,max_tokens:settings.maxTokens,top_p:settings.topP})});
-  if(!res.ok) throw new Error('API error: '+res.status);
-  const data=await res.json();
-  return data.choices?.[0]?.message?.content||data.choices?.[0]?.text||JSON.stringify(data);
+    const res = await fetch(url + '/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: model,
+        messages: [
+          { role: 'system', content: currentCharacter.prompt || 'You are a helpful assistant.' },
+          ...history
+        ],
+        stream: false,
+        options: { temperature: settings.temperature, num_predict: settings.maxTokens, top_p: settings.topP }
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.message?.content || data.response || JSON.stringify(data);
+    }
+  } catch (e) {}
+  const headers = { 'Content-Type': 'application/json' };
+  if (apiKey) headers['Authorization'] = 'Bearer ' + apiKey;
+  const res = await fetch(url + '/v1/chat/completions', {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify({
+      model: model,
+      messages: [
+        { role: 'system', content: currentCharacter.prompt || 'You are a helpful assistant.' },
+        ...history
+      ],
+      temperature: settings.temperature,
+      max_tokens: settings.maxTokens,
+      top_p: settings.topP
+    })
+  });
+  if (!res.ok) throw new Error('API error: ' + res.status);
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || data.choices?.[0]?.text || JSON.stringify(data);
 }
-
-async function sendToLocalModel(text,chatId) { throw new Error('Локальные модели пока не реализованы. Используйте серверный режим.'); }
 
 function clearCurrentChat() {
-  if(!currentCharacter) return;
-  if(!confirm('Очистить историю чата с '+currentCharacter.name+'?')) return;
-  const chatId='chat_'+currentCharacter.id;
-  chats[chatId]=[];
+  if (!currentCharacter) return;
+  if (!confirm('Очистить историю чата с ' + currentCharacter.name + '?')) return;
+  const chatId = 'chat_' + currentCharacter.id;
+  chats[chatId] = [];
   saveChats();
-  loadChatMessages(currentCharacter);
+  buildChatView();
+  showToast('Чат очищен');
 }
 
-function openSettings() { document.getElementById('settingsModal').classList.add('active'); loadSettingsToForm(); }
-function closeSettings() { document.getElementById('settingsModal').classList.remove('active'); }
-function openNewCharacterModal() { openSettings(); switchSettingsTab('character',document.querySelectorAll('#settingsModal .tab')[1]); }
-
-function switchSettingsTab(tab,btn) {
-  document.querySelectorAll('#settingsModal .tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('#settingsModal .tab-content').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('settings-tab-'+tab).classList.add('active');
+function saveChats() {
+  localStorage.setItem('aiChats', JSON.stringify(chats));
 }
 
-function onApiModeChange() {
-  const mode=document.getElementById('apiMode').value;
-  document.getElementById('serverSettingsGroup').style.display=mode==='server'?'block':'none';
-  document.getElementById('localSettingsGroup').style.display=mode==='local'?'block':'none';
-  document.getElementById('apiKeyGroup').style.display=mode==='server'?'block':'none';
-  document.getElementById('modelGroup').style.display=mode!=='demo'?'block':'none';
+/* ================= SETTINGS ================= */
+function openSettings() {
+  document.getElementById('settingsModal').classList.add('active');
+  loadSettingsToForm();
 }
-
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('active');
+}
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
 function loadSettingsToForm() {
-  document.getElementById('apiMode').value=settings.apiMode;
-  document.getElementById('apiUrl').value=settings.apiUrl;
-  document.getElementById('apiKey').value=settings.apiKey;
-  document.getElementById('modelName').value=settings.model;
-  document.getElementById('localModel').value=settings.localModel;
-  document.getElementById('temperature').value=settings.temperature;
-  document.getElementById('tempValue').textContent=settings.temperature;
-  document.getElementById('maxTokens').value=settings.maxTokens;
-  document.getElementById('tokenValue').textContent=settings.maxTokens;
-  document.getElementById('topP').value=settings.topP;
-  document.getElementById('topPValue').textContent=settings.topP;
-  onApiModeChange();
+  document.getElementById('setApiMode').value = settings.apiMode;
+  document.getElementById('setApiUrl').value = settings.apiUrl;
+  document.getElementById('setApiKey').value = settings.apiKey;
+  document.getElementById('setModel').value = settings.model;
+  document.getElementById('setTemp').value = settings.temperature;
+  document.getElementById('setTempVal').textContent = settings.temperature;
+  document.getElementById('setMaxTokens').value = settings.maxTokens;
+  document.getElementById('setTokenVal').textContent = settings.maxTokens;
+  document.getElementById('setTopP').value = settings.topP;
+  document.getElementById('setTopPVal').textContent = settings.topP;
 }
-
-function saveCharacter() {
-  const name=document.getElementById('charName').value.trim();
-  if(!name){alert('Введите имя персонажа');return;}
-  const tagsStr=document.getElementById('charTags').value;
-  const tags=tagsStr.split(',').map(t=>t.trim().toLowerCase()).filter(Boolean);
-  const char={id:'char_'+Date.now(),name:name,desc:document.getElementById('charDesc').value,emoji:document.getElementById('charEmoji').value||'🤖',prompt:document.getElementById('systemPrompt').value,category:document.getElementById('charCategory').value,tags:tags,apiMode:document.getElementById('apiMode').value,apiUrl:document.getElementById('apiUrl').value,model:document.getElementById('modelName').value};
-  characters.push(char);
-  saveCharacters();
-  settings.apiMode=document.getElementById('apiMode').value;
-  settings.apiUrl=document.getElementById('apiUrl').value;
-  settings.apiKey=document.getElementById('apiKey').value;
-  settings.model=document.getElementById('modelName').value;
-  settings.localModel=document.getElementById('localModel').value;
-  settings.temperature=parseFloat(document.getElementById('temperature').value);
-  settings.maxTokens=parseInt(document.getElementById('maxTokens').value);
-  settings.topP=parseFloat(document.getElementById('topP').value);
-  saveSettings();
-  renderCharactersGrid();
+function saveSettings() {
+  settings.apiMode = document.getElementById('setApiMode').value;
+  settings.apiUrl = document.getElementById('setApiUrl').value;
+  settings.apiKey = document.getElementById('setApiKey').value;
+  settings.model = document.getElementById('setModel').value;
+  settings.temperature = parseFloat(document.getElementById('setTemp').value);
+  settings.maxTokens = parseInt(document.getElementById('setMaxTokens').value);
+  settings.topP = parseFloat(document.getElementById('setTopP').value);
+  localStorage.setItem('aiSettings', JSON.stringify(settings));
+  showToast('Настройки сохранены');
   closeSettings();
-  document.getElementById('charName').value='';
-  document.getElementById('charDesc').value='';
-  document.getElementById('charTags').value='';
 }
 
-async function testConnection() {
-  const btn=event.target;
-  const orig=btn.textContent;
-  btn.textContent='⏳ Проверка...';
-  btn.disabled=true;
-  try {
-    const mode=document.getElementById('apiMode').value;
-    if(mode==='demo'){alert('✅ Демо-режим всегда работает!');}
-    else if(mode==='server'){
-      const url=document.getElementById('apiUrl').value;
-      const res=await fetch(url+'/api/tags',{method:'GET'});
-      if(res.ok){const data=await res.json();alert('✅ Подключение успешно! Модели: '+data.models?.map(m=>m.name).join(', '));}
-      else throw new Error('Status '+res.status);
-    }
-  }catch(err){alert('❌ Ошибка: '+err.message);}
-  finally{btn.textContent=orig;btn.disabled=false;}
-}
-
-function saveChats(){localStorage.setItem('aiChats_v2',JSON.stringify(chats));}
-function saveCharacters(){localStorage.setItem('aiCharacters_v2',JSON.stringify(characters));}
-function saveSettings(){localStorage.setItem('aiSettings_v2',JSON.stringify(settings));}
-
+/* ================= DATA ================= */
 function exportData() {
-  const data=JSON.stringify({chats,characters,settings,exportDate:new Date().toISOString()},null,2);
-  const blob=new Blob([data],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download='ai-chat-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  const data = JSON.stringify({ chats, characters, settings }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'ai-chat-backup-' + new Date().toISOString().slice(0,10) + '.json';
   a.click();
+  showToast('Данные экспортированы');
 }
-
 function importData() {
-  const input=document.createElement('input');
-  input.type='file';
-  input.accept='.json';
-  input.onchange=e=>{
-    const file=e.target.files[0];
-    const reader=new FileReader();
-    reader.onload=event=>{
-      try{
-        const data=JSON.parse(event.target.result);
-        if(data.chats) chats=data.chats;
-        if(data.characters) characters=data.characters;
-        if(data.settings) settings=data.settings;
-        saveChats();saveCharacters();saveSettings();
-        renderCharactersGrid();renderChatsList();loadSettingsToForm();
-        alert('✅ Данные импортированы!');
-      }catch(err){alert('❌ Ошибка импорта: '+err.message);}
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = event => {
+      try {
+        const data = JSON.parse(event.target.result);
+        if (data.chats) chats = data.chats;
+        if (data.characters) characters = data.characters;
+        if (data.settings) settings = data.settings;
+        saveChats();
+        localStorage.setItem('aiCharacters', JSON.stringify(characters));
+        localStorage.setItem('aiSettings', JSON.stringify(settings));
+        renderFeatured();
+        renderChatsList();
+        loadSettingsToForm();
+        showToast('Данные импортированы');
+      } catch (err) {
+        showToast('Ошибка импорта: ' + err.message);
+      }
     };
     reader.readAsText(file);
   };
   input.click();
 }
-
 function clearAllData() {
-  if(!confirm('ВНИМАНИЕ: Все чаты, персонажи и настройки будут удалены безвозвратно! Продолжить?')) return;
+  if (!confirm('ВНИМАНИЕ: Все чаты, персонажи и настройки будут удалены безвозвратно! Продолжить?')) return;
   localStorage.clear();
-  chats={};
-  characters=[{id:'c1',name:'Ассистент',desc:'Универсальный AI помощник',emoji:'🤖',prompt:'Ты — дружелюбный ассистент. Отвечай подробно и интересно.',category:'assistant',tags:['friendly','smart'],apiMode:'demo',apiUrl:'',model:''}];
-  settings={temperature:0.7,maxTokens:1024,topP:0.9,apiMode:'demo',apiUrl:'http://localhost:11434',apiKey:'',model:'llama3',localModel:'microsoft/DialoGPT-medium',lastChatId:null};
-  currentCharacter=null;
-  renderCharactersGrid();renderChatsList();
-  document.getElementById('messagesArea').innerHTML=`<div class="system-msg"><span class="system-msg-text">💡 Выберите персонажа, чтобы начать чат</span></div>`;
-  document.getElementById('chatHeaderName').textContent='Персонаж';
+  chats = {};
+  characters = [
+    { id: 'default', name: 'Ассистент', desc: 'Универсальный AI помощник', emoji: '🤖', category: 'Ассистенты', tags: ['Дружелюбный','Мудрый'], prompt: 'Ты — дружелюбный ассистент. Отвечай подробно и интересно.', apiMode: 'demo', apiUrl: '', model: '' }
+  ];
+  settings = { temperature: 0.7, maxTokens: 1024, topP: 0.9, apiMode: 'demo', apiUrl: 'http://localhost:11434', apiKey: '', model: 'llama3' };
+  currentCharacter = null;
+  renderFeatured();
+  renderChatsList();
+  buildChatView();
   closeSettings();
-  navigateTo('home');
+  showToast('Все данные удалены');
 }
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSettings();});
+/* ================= UTILS ================= */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeSettings();
+});
 </script>
 </body>
 </html>
