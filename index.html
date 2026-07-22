@@ -19,7 +19,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .main-content{flex:1;overflow:hidden;position:relative;-webkit-overflow-scrolling:touch}
 .page{display:none;height:100%;overflow-y:auto;padding-bottom:calc(var(--nh)+16px+var(--sb))}
 .page.active{display:block}
-.page.chat-active{padding-bottom:0}
+.page.chat-active{padding-bottom:0;height:100dvh}
 .search-bar{margin:12px 16px;position:relative}
 .search-bar input{width:100%;padding:12px 16px 12px 44px;background:var(--bt);border:1px solid var(--bd);border-radius:14px;color:var(--tp);font-size:15px;outline:none;font-family:inherit}
 .search-bar input::placeholder{color:var(--ts)}
@@ -64,7 +64,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .eci{font-size:64px;margin-bottom:16px;opacity:.4}
 .ec h3{font-size:18px;color:var(--tp);margin-bottom:8px}
 .ec p{font-size:14px}
-.chat-screen{display:flex;flex-direction:column;height:100%}
+.chat-screen{display:flex;flex-direction:column;height:100%;position:relative;z-index:10}
 .chb{padding:12px 16px;background:var(--bs);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:12px;flex-shrink:0}
 .chb .bb{background:none;border:none;color:var(--tp);font-size:20px;cursor:pointer;padding:4px}
 .chb .cha{width:40px;height:40px;border-radius:50%;background:var(--ag);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden}
@@ -92,7 +92,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .ti span:nth-child(2){animation-delay:.2s}
 .ti span:nth-child(3){animation-delay:.4s}
 @keyframes b{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
-.cia{padding:10px 12px 16px;background:var(--bs);border-top:1px solid var(--bd);padding-bottom:calc(16px+var(--sb));flex-shrink:0}
+.cia{padding:10px 12px 16px;background:var(--bs);border-top:1px solid var(--bd);padding-bottom:calc(16px+var(--sb));flex-shrink:0}.cia.chat-bottom{padding-bottom:calc(16px+var(--sb));position:fixed;bottom:0;left:0;right:0;z-index:90}
 .ciw{display:flex;gap:10px;align-items:flex-end;background:var(--bt);border:1px solid var(--bd);border-radius:20px;padding:8px 12px}
 .ciw:focus-within{border-color:var(--ac)}
 .cta{flex:1;background:none;border:none;color:var(--tp);font-size:15px;resize:none;outline:none;max-height:100px;min-height:22px;font-family:inherit;padding:4px 0}
@@ -101,7 +101,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .sb2:hover{background:var(--ah)}
 .sb2:disabled{background:var(--bh);cursor:not-allowed}
 .bn{height:var(--nh);background:var(--bs);border-top:1px solid var(--bd);display:flex;justify-content:space-around;align-items:center;padding-bottom:var(--sb);flex-shrink:0;z-index:100;transition:transform .3s ease}
-.bn.hidden{transform:translateY(100%)}
+.bn.hidden{display:none}
 .ni{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px;cursor:pointer;color:var(--ts);transition:color .2s;border:none;background:none;font-family:inherit}
 .ni .nix{font-size:22px}
 .ni .nl{font-size:11px;font-weight:500}
@@ -251,9 +251,9 @@ let st=JSON.parse(localStorage.getItem('as3'))||{t:0.7,mt:1024,tp:0.9,provider:'
 let dr={Ассистент:['Интересный вопрос! Давай разберём...','Я понимаю о чём ты. Вот что думаю...','Отличная тема! Вот мой взгляд...'],Писатель:['О, прекрасная идея! Представь сцену...','Вот как я бы описал: \"Тени падали...\"','Как писатель, вижу драматический поворот...'],Программист:['Для этого подойдёт следующий подход...','Вот пример кода:\n\n```python\ndef sol():\n    return \"Hello\"\n```','С точки зрения архитектуры...'],'Эльфийка Ариэль':['*прищуривается* Ах, странник...','*касается кристалла* Ветра шепчут...','*улыбается загадочно* Ты ищешь знания...'],'Демон Люцифер':['*хитро улыбается* О, смертный...','*скрещивает руки* Заплати цену...','*смеётся* Давай поиграем...'],'Клоун Бобо':['ХА-ХА-ХА! Как анекдот про слона!','*падает со стула* Ой, слишком смешно!','Знаешь, что общего? Оба абсурдны!']};
 const guides={groq:'<h4>⚡ Groq — быстро и бесплатно</h4><p>1. Зайди на <b>console.groq.com</b></p><p>2. Нажми Sign Up → зарегистрируйся</p><p>3. Перейди в <b>API Keys</b> → <b>Create API Key</b></p><p>4. Скопируй ключ (начинается с <code>gsk_</code>)</p><p>5. Вставь его выше ↑</p><p><b>Модели:</b> <code>llama-3.1-70b-versatile</code>, <code>llama-3.1-8b-instant</code>, <code>mixtral-8x7b-32768</code></p><p><span class="pc-tag free">Бесплатно</span> <span class="pc-tag paid">Есть цензура</span></p>',hf:'<h4>🤗 HuggingFace Inference API</h4><p>1. Зайди на <b>huggingface.co</b></p><p>2. Зарегистрируйся → Settings → <b>Access Tokens</b></p><p>3. Создай токен → скопируй (<code>hf_</code>)</p><p>4. Вставь его выше ↑</p><p>5. Укажи модель: <code>meta-llama/Llama-3.1-8B-Instruct</code></p><p><span class="pc-tag partial">Бесплатно с лимитами</span> <span class="pc-tag paid">Есть цензура</span></p>',lmstudio:'<h4>💻 LM Studio — свой ПК, без цензуры</h4><p>1. Скачай <b>lmstudio.ai</b> на компьютер</p><p>2. Загрузи модель (Search → скачай GGUF)</p><p>3. Вкладка <b>Local Server</b> → <b>Start Server</b></p><p>4. Узнай IP компьютера: Windows — <code>ipconfig</code>, Mac — <code>ifconfig</code></p><p>5. Вставь URL: <code>http://IP:1234/v1</code></p><p><b>Модели без цензуры:</b> <code>dolphin</code>, <code>wizard-vicuna-uncensored</code></p><p><span class="pc-tag free">Бесплатно</span> <span class="pc-tag free">Без цензуры</span></p>',ollama:'<h4>🐑 Ollama — свой ПК, без цензуры</h4><p>1. Скачай <b>ollama.com</b> на компьютер</p><p>2. Открой терминал → <code>ollama pull llama3</code></p><p>3. Запусти: <code>ollama run llama3</code></p><p>4. Узнай IP компьютера: Windows — <code>ipconfig</code>, Mac — <code>ifconfig</code></p><p>5. Вставь URL: <code>http://IP:11434</code></p><p><b>Модели без цензуры:</b> <code>dolphin-mixtral</code>, <code>wizard-vicuna</code></p><p><span class="pc-tag free">Бесплатно</span> <span class="pc-tag free">Без цензуры</span></p>',demo:'<h4>🎮 Демо-режим</h4><p>Работает без интернета и API ключей.</p><p>Показывает заготовленные ответы для теста интерфейса.</p><p>Чтобы получить реальные ответы — выбери другой провайдер.</p>'};
 document.addEventListener('DOMContentLoaded',()=>{rcg();rcl();lsf();sar();
-if(st.lc&&ch[st.lc]&&ch[st.lc].length>0){let cid=st.lc.replace('chat_',''),c=cr.find(x=>x.id===cid);if(c){cc3=c;nt('chat');lcm(c)}}});
+if(st.lc&&ch[st.lc]&&ch[st.lc].length>0){let cid=st.lc.replace('chat_',''),c=cr.find(x=>x.id===cid);if(c){cc3=c;nt('chat');lcm(c)}}else{let bn=document.getElementById('bn');bn.classList.remove('hidden');let cia=document.querySelector('.cia');if(cia)cia.classList.remove('chat-bottom')}});
 function sar(){document.getElementById('cta').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'})}
-function nt(p){cp=p;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));let pg=document.getElementById('p-'+p);pg.classList.add('active');pg.classList.toggle('chat-active',p==='chat');document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));let nb=document.querySelector(`.ni[data-p="${p}"]`);if(nb)nb.classList.add('active');let bn=document.getElementById('bn');bn.classList.toggle('hidden',p==='chat');if(p==='chats')rcl();if(p==='home')rcg();if(p==='chat'&&cc3){let nich=document.getElementById('ni-chat');nich.querySelector('.nix').textContent=cc3.emoji||'🤖';nich.querySelector('.nl').textContent=cc3.name||'Чат'}}
+function nt(p){cp=p;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));let pg=document.getElementById('p-'+p);pg.classList.add('active');pg.classList.toggle('chat-active',p==='chat');document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));let nb=document.querySelector(`.ni[data-p="${p}"]`);if(nb)nb.classList.add('active');let bn=document.getElementById('bn');let cia=document.querySelector('.cia');if(p==='chat'){bn.classList.add('hidden');if(cia)cia.classList.add('chat-bottom')}else{bn.classList.remove('hidden');if(cia)cia.classList.remove('chat-bottom')}if(p==='chats')rcl();if(p==='home')rcg();if(p==='chat'&&cc3){let nich=document.getElementById('ni-chat');nich.querySelector('.nix').textContent=cc3.emoji||'🤖';nich.querySelector('.nl').textContent=cc3.name||'Чат'}}
 function rcg(){let g=document.getElementById('cg'),f=cr;if(fc2!=='all')f=f.filter(c=>c.category===fc2);if(ft!=='all')f=f.filter(c=>c.tags&&c.tags.includes(ft));if(sq){let q=sq.toLowerCase();f=f.filter(c=>c.name.toLowerCase().includes(q)||c.desc.toLowerCase().includes(q)||(c.tags&&c.tags.some(t=>t.toLowerCase().includes(q))))}if(f.length===0){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ts)">Ничего не найдено</div>';return}g.innerHTML=f.map(c=>{let av=c.img?`<img src="${c.img}">`:c.emoji||'🤖';return `<div class="card" onclick="occ('${c.id}')"><div class="cs2 ${c.provider==='demo'?'off':''}"></div><div class="ca ${c.img?'img':''}">${av}</div><div class="cn">${c.name}</div><div class="cd">${c.desc||''}</div><div class="ctg">${(c.tags||[]).slice(0,3).map(t=>`<span class="ct">${t}</span>`).join('')}</div></div>`}).join('')}
 function fbc(c){fc2=c;document.querySelectorAll('.cc').forEach(x=>x.classList.toggle('active',x.dataset.c===c));rcg()}
 function fbt(t){ft=t;document.querySelectorAll('.tc').forEach(x=>x.classList.toggle('active',x.dataset.t===t));rcg()}
